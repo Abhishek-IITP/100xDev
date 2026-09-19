@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum FriendStatus {
+  ACCEPTED
+  REJECTED
+  PENDING
+}
+enum SignEnum {
+  ADD
+  SUBTRACT
+  MULTIPLY
+  DIVIDE
+}
+enum GameMemberStatus {
+  WON
+  LOSS
+}
+enum GameStatus {
+  ACTIVE
+  SEARCHING_FOR_PLAYER
+  OVER
+}
+
+model User{
+id  String  @id @default(uuid())
+email String @unique
+password String 
+username String @unique
+gameMembers GameMember[]
+rating UserRating?
+sender Friends[] @relation("sender")
+reciver Friends[] @relation("reciver")
+answer QuestionAnswer[]
+}
+
+model Game{
+id  String  @id @default(uuid())
+// question String 
+timeLimit Int
+startTime   DateTime @default(now())
+endTime DateTime?
+status GameStatus
+gameMember     GameMember[]
+question Question[]
+// answer QuestionAnswer[]
+}
+
+model UserRating{
+  id String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+model GameMember {
+  id     String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  gameId String
+  game   Game   @relation(fields: [gameId], references: [id])
+
+   @@unique([userId, gameId])
+}
+
+model Friends{
+   id  String @id @default(uuid())
+  senderID String
+
+  sender User @relation("sender",fields: [senderID], references: [id])
+  
+  reciverId String
+
+  reciver User @relation ( "reciver", fields: [reciverId], references: [id])
+  status FriendStatus @default(PENDING)
+createdAt  DateTime     @default(now())
+}
+
+model Question{
+  id String @id @default(uuid())
+
+  gameId String
+  game Game @relation(fields:[gameId], references: [id])
+  
+  systemAnswer Int
+
+  operation1 Int
+  operation2 Int
+  
+  sign SignEnum
+
+  answer QuestionAnswer[]
+}
+
+model QuestionAnswer{
+  id String @id @default(uuid())
+  
+  questionId String
+  question Question @relation(fields: [questionId], references: [id])
+
+
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+}
+
