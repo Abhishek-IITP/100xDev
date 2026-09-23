@@ -1,0 +1,11 @@
+# Compiled output
+/target/
+
+# Rust package lock (optional, see below)
+Cargo.lock
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
