@@ -8,7 +8,7 @@ A minimal Prisma + PostgreSQL setup using **TypeScript**, **tsx**, and **Docker*
 
 * Node.js (v18+ recommended)
 * Docker
-* npm
+* npm or Bun
 
 ---
 
@@ -20,6 +20,8 @@ A minimal Prisma + PostgreSQL setup using **TypeScript**, **tsx**, and **Docker*
 mkdir hello-prisma
 cd hello-prisma
 npm init -y
+# Bun equivalent:
+bun init
 ```
 
 ### 2. Install Dependencies
@@ -30,6 +32,16 @@ npx tsc --init
 
 npm install prisma @types/node @types/pg --save-dev
 npm install @prisma/client @prisma/adapter-pg pg dotenv
+```
+
+#### Bun
+
+```bash
+bun add -d typescript tsx @types/node
+bunx tsc --init
+
+bun add -d prisma @types/node @types/pg
+bun add @prisma/client @prisma/adapter-pg pg dotenv
 ```
 
 ---
@@ -71,6 +83,12 @@ npm install @prisma/client @prisma/adapter-pg pg dotenv
 npx prisma init
 ```
 
+#### Bun
+
+```bash
+bunx prisma init
+```
+
 ### `prisma.config.ts`
 
 ```ts
@@ -93,7 +111,7 @@ export default defineConfig({
 Create `.env`:
 
 ```env
-DATABASE_URL="postgresql://postgres:mypassword@localhost:5432/postgres"
+DATABASE_URL="postgresql://postgres:mypassword@localhost:5432/mydb"
 ```
 
 ---
@@ -106,6 +124,35 @@ docker run -e POSTGRES_PASSWORD=mypassword \
 -d -p 5432:5432 \
 --name postgres-db-new \
 postgres
+```
+
+### PostgreSQL Commands
+
+Check the container status:
+
+```bash
+docker ps
+```
+
+Start or stop the PostgreSQL container:
+
+```bash
+docker start postgres-db-new
+docker stop postgres-db-new
+```
+
+Open a PostgreSQL shell inside the container:
+
+```bash
+docker exec -it postgres-db-new psql -U postgres -d mydb
+```
+
+Useful `psql` commands:
+
+```sql
+\l          -- List databases
+\dt         -- List tables
+\q          -- Exit psql
 ```
 
 ---
@@ -121,6 +168,13 @@ Update `prisma/schema.prisma` with your models.
 ```bash
 npx prisma migrate dev --name init
 npx prisma generate
+```
+
+#### Bun
+
+```bash
+bunx prisma migrate dev --name init
+bunx prisma generate
 ```
 
 ---
@@ -195,6 +249,12 @@ main()
 
 ```bash
 npm run dev
+```
+
+#### Bun
+
+```bash
+bun run dev
 ```
 
 ---
