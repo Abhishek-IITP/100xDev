@@ -40,8 +40,8 @@ npm install @prisma/client @prisma/adapter-pg pg dotenv
 bun add -d typescript tsx @types/node
 bunx tsc --init
 
-bun add -d prisma @types/node @types/pg
-bun add @prisma/client @prisma/adapter-pg pg dotenv
+bun add prisma@prev @types/pg --dev
+bun add @prisma/client@7 @prisma/adapter-pg pg dotenv
 ```
 
 ---
@@ -86,7 +86,7 @@ npx prisma init
 #### Bun
 
 ```bash
-bunx prisma init
+bunx --bun prisma init --output ../generated/prisma
 ```
 
 ### `prisma.config.ts`
